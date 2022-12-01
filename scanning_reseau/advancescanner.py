@@ -4,12 +4,22 @@ from socket import *
 import optparse
 from threading import *
 
+def connScan(tgHost, tgtPorts):
+    try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((tgtPorts, tgHost))
+            print('[+] %/tcp Open' % tgtPorts)
+    except:
+            print('[-] %d/tcp Closed' % tgtPorts)
+    finally:
+            sock.close()
+
 def portScan(tgHosts,tgPorts):
     try:
             tgIP = gethostbyname(tgHosts)
     
     except:
-            print('Unknown host %d' %tgHosts)
+            print('Unknown host %s' %tgHosts)
     
     try:
             tgName= gethostbyaddr(tgIP)
@@ -19,7 +29,7 @@ def portScan(tgHosts,tgPorts):
             print('[*]Scan results for: ' + tgIP)
     
     for tgtPort in tgPorts:
-        t = Thread(target=connScan, args=(tgHosts, int(tgPort)))
+        t = Thread(target=connScan, args=(tgHosts, int(tgtPort)))
         t.start()
 
     
@@ -35,5 +45,5 @@ def main():
         exit(0)
     portScan(tgHosts.tgPorts)
 
-if __name__= '__main__':
+if __name__== '__main__':
     main()
